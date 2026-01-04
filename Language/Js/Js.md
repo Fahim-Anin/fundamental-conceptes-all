@@ -598,6 +598,98 @@ const copy = [...original];
 console.log(copy === original);        // false (different arrays)
 console.log(copy[0] === original[0]);  // true  (same referenced object)
 
+// Shallow Copy(Array of object)
+
+// Shallow Copy (Array of Object) — MEMORY LEVEL EXPLANATION
+
+// Step 1: আসল data
+const fruits = [
+  { name: "a" },
+  { name: "b" }
+];
+
+/*
+MEMORY STATE:
+
+fruits ──► 0xA1 (ARRAY)
+             |
+             |-- index 0 ──► 0xB1 (OBJECT) ──► { name: "a" }
+             |
+             |-- index 1 ──► 0xB2 (OBJECT) ──► { name: "b" }
+*/
+
+// Step 2: Spread দিয়ে array copy
+const result = [...fruits];
+
+/*
+MEMORY STATE AFTER SPREAD:
+
+result ──► 0xA2 (NEW ARRAY)
+             |
+             |-- index 0 ──► 0xB1 (SAME OBJECT)
+             |
+             |-- index 1 ──► 0xB2 (SAME OBJECT)
+
+IMPORTANT:
+- fruits !== result  (array আলাদা)
+- fruits[0] === result[0] (object SAME reference)
+*/
+
+// Step 3: Reference proof
+console.log(fruits === result);      // false
+console.log(fruits[0] === result[0]); // true
+
+// Step 4: Object change করলে কী হয়?
+result[0].name = "x";
+
+/*
+Since both point to same object (0xB1),
+object change reflects everywhere
+*/
+
+console.log(fruits);
+// [ { name: "x" }, { name: "b" } ]
+
+console.log(result);
+// [ { name: "x" }, { name: "b" } ]
+
+// 👉 This is SHALLOW COPY problem
+
+
+// Step 5: Correct way — copy EACH object separately
+const deepCopy = fruits.map(fruit => ({ ...fruit }));
+
+/*
+MEMORY STATE AFTER map + spread:
+
+deepCopy ──► 0xA3 (NEW ARRAY)
+               |
+               |-- index 0 ──► 0xC1 (NEW OBJECT) ──► { name: "a" }
+               |
+               |-- index 1 ──► 0xC2 (NEW OBJECT) ──► { name: "b" }
+
+NO shared reference
+*/
+
+// Step 6: Test safety
+deepCopy[0].name = "y";
+
+console.log(deepCopy);
+// [ { name: "y" }, { name: "b" } ]
+
+console.log(fruits);
+// [ { name: "x" }, { name: "b" } ]  ✅ original safe
+
+// Step 7: Final Rule (Golden Rule)
+/*
+1. [...array]        → copies array only
+2. {...object}       → copies object only
+3. array of object   → need map + {...obj}
+4. Spread creates SHALLOW copy by default
+*/
+
+
+
 // Use spread to merge arrays or pass as args
 function sum3(a,b,c){ return a+b+c; }
 console.log(sum3(...[1,2,3])); // 6
