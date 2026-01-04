@@ -602,7 +602,7 @@ console.log(copy[0] === original[0]);  // true  (same referenced object)
 
 // Shallow Copy (Array of Object) — MEMORY LEVEL EXPLANATION
 
-// Step 1: আসল data
+// Step 1: Real data
 const fruits = [
   { name: "a" },
   { name: "b" }
@@ -618,7 +618,7 @@ fruits ──► 0xA1 (ARRAY)
              |-- index 1 ──► 0xB2 (OBJECT) ──► { name: "b" }
 */
 
-// Step 2: Spread দিয়ে array copy
+// Step 2: Spread of array copy
 const result = [...fruits];
 
 /*
@@ -631,7 +631,7 @@ result ──► 0xA2 (NEW ARRAY)
              |-- index 1 ──► 0xB2 (SAME OBJECT)
 
 IMPORTANT:
-- fruits !== result  (array আলাদা)
+- fruits !== result  (array different)
 - fruits[0] === result[0] (object SAME reference)
 */
 
@@ -639,7 +639,7 @@ IMPORTANT:
 console.log(fruits === result);      // false
 console.log(fruits[0] === result[0]); // true
 
-// Step 4: Object change করলে কী হয়?
+// Step 4: if we change object value?
 result[0].name = "x";
 
 /*
